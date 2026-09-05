@@ -22,7 +22,190 @@ body,
 }
 
 html {
-  background: var(--gap);
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.route-fade {
+  animation: route-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes route-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0ms),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0ms);
+}
+
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -7px;
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-6px);
+  }
+  75% {
+    transform: translateX(6px);
+  }
+}
+
+.chip {
+  transition: transform 0.35s cubic-bezier(0.44, 0, 0.56, 1);
+  animation: bob 4.6s ease-in-out infinite;
+}
+
+.chip:nth-of-type(1),
+.tilt-photo {
+  transform: rotate(4deg);
+  animation-delay: 0s;
+}
+
+.chip.float-2 {
+  animation-delay: 0.4s;
+}
+
+.chip.float-3 {
+  animation-delay: 0.9s;
+}
+
+.chip.float-4 {
+  animation-delay: 1.3s;
+}
+
+.hero-line .chip:hover {
+  transform: rotate(-8deg) scale(1.14);
+  animation-play-state: paused;
+}
+
+.nav-links a {
+  transition: color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+}
+
+.nav-links a:hover {
+  color: var(--ink);
+}
+
+.btn-resume {
+  transition: transform 0.25s cubic-bezier(0.44, 0, 0.56, 1), filter 0.25s ease;
+}
+
+.btn-resume:hover {
+  transform: scale(1.05);
+  filter: brightness(1.05);
+}
+
+.tilt {
+  transform-style: preserve-3d;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+}
+
+.project-card {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.contact a {
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.contact a:hover {
+  transform: translateX(4px);
+  color: var(--accent);
+}
+
+.love {
+  animation: pulse-soft 3.2s ease-in-out infinite;
+}
+
+.back {
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.back:hover {
+  transform: translateX(-3px) scale(1.03);
+  filter: brightness(1.06);
+}
+
+.full-study {
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.full-study:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+}
+
+.hobby-grid img,
+.about-hero .portrait,
+.hero-shot img {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hobby-grid > div:hover img,
+.about-hero .portrait:hover {
+  transform: scale(1.04);
+}
+
+.gate.shake {
+  animation: shake 0.35s ease;
+}
+
+.gate button[type="submit"] {
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.gate button[type="submit"]:hover {
+  transform: scale(1.02);
+  filter: brightness(1.05);
 }
 
 body {
@@ -601,7 +784,7 @@ input {
   background: #fff;
 }
 
-.gate button {
+.gate button[type="submit"] {
   height: 46px;
   border: 0;
   border-radius: 10px;
@@ -614,6 +797,95 @@ input {
 .return-link {
   margin-top: 28px;
   font-size: 14px;
+}
+
+.gate-field {
+  position: relative;
+}
+
+.gate-field input {
+  width: 100%;
+  padding-right: 64px;
+}
+
+.gate-eye {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  height: 32px;
+  width: auto;
+  padding: 0 10px;
+  border: 0;
+  background: transparent;
+  color: #666;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.gate-error {
+  color: var(--accent);
+  font-size: 14px;
+  text-align: left;
+}
+
+.study-nav {
+  position: sticky;
+  top: 8px;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  padding: 10px;
+  background: rgba(250, 249, 246, 0.92);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+}
+
+.study-nav a {
+  font-size: 13px;
+  color: #8a8a8a;
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+.study-nav a:hover {
+  color: var(--ink);
+  background: #fff;
+}
+
+.study-video {
+  display: block;
+  width: 100%;
+  border-radius: 16px;
+  margin: 24px 0;
+  background: #111;
+}
+
+.row-2,
+.row-3 {
+  display: grid;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.row-2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.row-3 {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.stack h5 {
+  margin: 24px 0 8px;
+}
+
+.proto-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0 24px;
 }
 
 .usda-img {
@@ -678,7 +950,9 @@ input {
   .contact,
   .hobby-grid,
   .context-grid,
-  .goals {
+  .goals,
+  .row-2,
+  .row-3 {
     grid-template-columns: 1fr;
   }
 

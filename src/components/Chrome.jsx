@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { assets, links } from "../assets";
+import { Reveal } from "./Motion";
 
 export function Nav({ active }) {
   return (
@@ -30,9 +31,11 @@ export function Nav({ active }) {
 export function Friends() {
   return (
     <section className="panel friends">
-      <h2>Let&apos;s be friends!!</h2>
-      <p className="sub">I&apos;d love to connect with you!</p>
-      <div className="contact">
+      <Reveal>
+        <h2>Let&apos;s be friends!!</h2>
+        <p className="sub">I&apos;d love to connect with you!</p>
+      </Reveal>
+      <Reveal className="contact" delay={120}>
         <a href={links.email}>
           <div className="label">Email</div>
           <div className="value">{links.emailLabel}</div>
@@ -41,7 +44,7 @@ export function Friends() {
           <div className="label">LinkedIn</div>
           <div className="value">{links.linkedinLabel}</div>
         </a>
-      </div>
+      </Reveal>
     </section>
   );
 }

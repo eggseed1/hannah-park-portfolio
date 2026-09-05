@@ -1,7 +1,8 @@
 import { useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { assets } from "../assets";
 import { Friends, Nav, Page } from "../components/Chrome";
+import { Reveal, TiltLink } from "../components/Motion";
 
 const projects = [
   {
@@ -42,52 +43,56 @@ export default function Home() {
       <section className="panel" id="hero">
         <Nav active="work" />
         <div className="hero">
-          <div className="hero-lines">
+          <Reveal className="hero-lines">
             <div className="hero-line">
               <h1>hello, i’m hannah</h1>
-              <img className="chip" src={assets.headshot} alt="" />
+              <img className="chip tilt-photo" src={assets.headshot} alt="" />
               <h1>a designer</h1>
             </div>
             <div className="hero-line">
               <h1>raised in dmv</h1>
-              <img className="chip" src={assets.crab} alt="" />
+              <img className="chip float-2" src={assets.crab} alt="" />
               <h1>based in boston.</h1>
             </div>
             <div className="hero-line">
               <h1>designs w/ empathy</h1>
-              <img className="chip" src={assets.palm} alt="" />
+              <img className="chip float-3" src={assets.palm} alt="" />
               <h1>studying</h1>
             </div>
             <div className="hero-line">
               <h1>psych & cs @ harvard</h1>
-              <img className="chip wide" src={assets.harvard} alt="" />
+              <img className="chip wide float-4" src={assets.harvard} alt="" />
             </div>
-          </div>
-          <div className="prev">
+          </Reveal>
+          <Reveal className="prev" delay={180}>
             <span>Previously at</span>
             <div className="prev-logos">
               <img src={assets.coinbaseLogo} alt="coinbase" />
               <img src={assets.ibmLogo} alt="IBM" />
               <img src={assets.hanwhaLogo} alt="Hanwha" />
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       <section className="panel projects" id="projects">
         <div className="wrap">
-          <h3>Featured Projects</h3>
+          <Reveal>
+            <h3>Featured Projects</h3>
+          </Reveal>
           <div className="grid">
-            {projects.map((p) => (
-              <Link className="project-card" to={p.to} key={p.to}>
-                <div className="project-media">
-                  <img src={p.img} alt={p.title} />
-                  <div className="project-copy">
-                    <p>{p.blurb}</p>
-                    <h4>{p.title}</h4>
+            {projects.map((p, i) => (
+              <Reveal key={p.to} delay={i * 80}>
+                <TiltLink className="project-card" to={p.to}>
+                  <div className="project-media">
+                    <img src={p.img} alt={p.title} />
+                    <div className="project-copy">
+                      <p>{p.blurb}</p>
+                      <h4>{p.title}</h4>
+                    </div>
                   </div>
-                </div>
-              </Link>
+                </TiltLink>
+              </Reveal>
             ))}
           </div>
         </div>

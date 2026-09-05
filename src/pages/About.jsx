@@ -1,12 +1,13 @@
 import { assets, links } from "../assets";
 import { Friends, Nav, Page } from "../components/Chrome";
+import { Reveal } from "../components/Motion";
 
 export default function About() {
   return (
     <Page>
       <section className="panel">
         <Nav active="about" />
-        <div className="about-hero">
+        <Reveal className="about-hero">
           <img className="portrait" src={assets.headshot} alt="Hannah Park" />
           <h1>Hi, I&apos;m Hannah!</h1>
           <div className="about-copy">
@@ -23,29 +24,33 @@ export default function About() {
               everyone can use and connect with what we create.
             </p>
           </div>
-        </div>
+        </Reveal>
 
         <div className="unfiltered wrap">
-          <div className="kicker">ME, UNFILTERED</div>
-          <h3>I &lt;3 expressing my creativity in unconventional ways</h3>
+          <Reveal>
+            <div className="kicker">ME, UNFILTERED</div>
+            <h3>I &lt;3 expressing my creativity in unconventional ways</h3>
+          </Reveal>
           <div className="hobby-grid">
-            <div>
+            <Reveal delay={0}>
               <img src={assets.aquarium} alt="" />
               <p>I enjoy aquascaping for my pet fish!</p>
-            </div>
-            <div>
+            </Reveal>
+            <Reveal delay={80}>
               <img src={assets.collage} alt="" />
               <p>I collect junk to make collages</p>
-            </div>
-            <div>
+            </Reveal>
+            <Reveal delay={160}>
               <img src={assets.blog} alt="" />
               <p>I write on my personal blog about books :)</p>
-            </div>
+            </Reveal>
           </div>
 
-          <h3>I am a huge fan of all kinds of music !!</h3>
+          <Reveal>
+            <h3>I am a huge fan of all kinds of music !!</h3>
+          </Reveal>
           <div className="hobby-grid tall">
-            <div>
+            <Reveal delay={0}>
               <img src={assets.archive} alt="" />
               <p>
                 I archive 1920-50s music (
@@ -54,15 +59,15 @@ export default function About() {
                 </a>
                 )
               </p>
-            </div>
-            <div>
+            </Reveal>
+            <Reveal delay={80}>
               <img src={assets.concert} alt="" />
               <p>I like going to concerts with my friends ^_^</p>
-            </div>
-            <div>
+            </Reveal>
+            <Reveal delay={160}>
               <img src={assets.vinyl} alt="" />
               <p>I also dj with a vinyl</p>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
