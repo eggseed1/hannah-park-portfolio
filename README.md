@@ -11,8 +11,13 @@ npm run dev
 
 ## GitHub Pages
 
-After the first push, enable **Settings → Pages → GitHub Actions**. The site deploys from `main` to:
+The live recreation is in this repo. GitHub Pages deploy is in `deploy-pages.yml.example` (the GitHub token used to create the repo did not include the `workflow` scope).
 
-`https://<your-username>.github.io/hannah-park-portfolio/`
+To publish:
 
-To serve it on `hannah-park.com` later, add a Pages custom domain and set `VITE_BASE` to `/` in `.github/workflows/pages.yml`.
+1. Copy `deploy-pages.yml.example` to `.github/workflows/pages.yml`
+2. Push, then enable **Settings → Pages → GitHub Actions**
+
+The site will be at `https://eggseed1.github.io/hannah-park-portfolio/`
+
+To serve it on `hannah-park.com`, add a Pages custom domain and set `VITE_BASE` to `/` in that workflow.

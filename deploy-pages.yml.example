@@ -1,3 +1,5 @@
+# Copy to `.github/workflows/pages.yml` after granting the `workflow` GitHub token scope.
+
 name: Deploy
 
 on:
