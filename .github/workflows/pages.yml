@@ -96,5 +96,5 @@ jobs:
         if: success()
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run mobile-audit.yml --ref main
+        run: gh workflow run mobile-audit.yml --ref main --repo "$GITHUB_REPOSITORY"
 
