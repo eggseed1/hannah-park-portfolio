@@ -1,0 +1,31 @@
+name: Mobile responsive audit
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/mobile-audit.yml'
+      - 'scripts/audit-mobile.mjs'
+permissions:
+  contents: read
+jobs:
+  responsive-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install browser audit tools
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Audit phones, tablet, desktop
+        run: node scripts/audit-mobile.mjs
+      - name: Keep visual and JSON audit artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: responsive-audit
+          path: mobile-audit/
+          retention-days: 7
