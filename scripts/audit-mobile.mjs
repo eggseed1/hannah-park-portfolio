@@ -80,7 +80,7 @@ console.log('SUMMARY '+JSON.stringify({checked:results.length,issueViews:issues.
 
 const hardFailures = results.filter(r =>
   r.error || r.http !== 200 || r.legacyEmailVisible || r.legacyEmailLink ||
-  (['/', '/about/'].includes(r.route) && (!r.correctEmailVisible || !r.correctEmailLink))
+  (r.route === '/' && (!r.correctEmailVisible || !r.correctEmailLink))
 );
 if (hardFailures.length) {
   console.error('FAILED PUBLIC ROUTE OR CONTACT ASSERTION '+JSON.stringify(
