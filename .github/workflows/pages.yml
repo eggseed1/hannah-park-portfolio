@@ -56,6 +56,25 @@ jobs:
       - name: Repair relative navigation for GitHub Pages subpath
         run: python3 scripts/prepare-pages.py --root dist --base /hannah-park-portfolio/
 
+      - name: Show Pages publishing configuration
+        run: gh api "repos/$GITHUB_REPOSITORY/pages" --jq '{build_type,source}'
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Match branch-based Pages source to the verified Framer build
+        run: |
+          cp dist/index.html index.html
+          cp dist/404.html 404.html
+          cp -a dist/about dist/portfolio dist/coinbase dist/ibm ./
+          touch .nojekyll
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html 404.html .nojekyll about portfolio coinbase ibm
+          if ! git diff --cached --quiet; then
+            git commit -m "Keep Pages branch source aligned with exact Framer snapshot [skip ci]"
+            git push origin HEAD:main || echo "Source sync push skipped due to newer main commit"
+          fi
+
       - name: Upload original Framer site with corrected route links
         uses: actions/upload-pages-artifact@v3
         with:
