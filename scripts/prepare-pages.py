@@ -14,6 +14,73 @@ from urllib.parse import urljoin, urlsplit
 from urllib.parse import unquote
 
 ORIGIN = "https://affable-impact-924611.framer.app"
+
+# Small, audited mobile adjustments on the *published copy* only.
+# Framer's original markup/CSS stays intact under framer-export/ for rollback.
+RESPONSIVE_CSS = """<style id="hannah-pages-responsive-fixes">
+@media (max-width:809px) {
+  /* Framer's 334px hero row clips its text on 320px phones. */
+  #hero .framer-1bc5zmt {
+    width: min(334px, calc(100vw - 32px)) !important;
+    max-width: 100% !important;
+  }
+  #hero .framer-1bc5zmt h1 {
+    font-size: clamp(26px, 8.5vw, 32px) !important;
+    line-height: 1.18 !important;
+  }
+
+  /* Keep the contact headline in proportion with a small phone screen. */
+  #contact h2 {
+    font-size: clamp(39px, 10.5vw, 52px) !important;
+    line-height: 1.13 !important;
+  }
+
+  /* Footer rich-text anchors were only 14-16px tall on phones. */
+  footer.framer-MDJKr a[data-styles-preset="ro7OPezbn"],
+  a[href$="#projects"] {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 44px !important;
+  }
+
+  /* Framer retained 619px fixed widths on small project-detail layouts. */
+  .framer-cVd3z .framer-8cti9g,
+  .framer-cVd3z .framer-12mrlz6,
+  .framer-cVd3z .framer-1bmm2r6,
+  .framer-cVd3z .framer-1jql7gu,
+  .framer-cVd3z .framer-63ghmk,
+  .framer-cVd3z .framer-1cogktb,
+  .framer-cVd3z .framer-1aor2sy,
+  .framer-cVd3z .framer-15swqiz,
+  .framer-cVd3z .framer-uiup3i,
+  .framer-cVd3z .framer-18d9xcv,
+  .framer-cVd3z .framer-gink0f,
+  .framer-cVd3z .framer-1jx5pu5,
+  .framer-cVd3z .framer-15xyo1e,
+  .framer-cVd3z .framer-1bp2753,
+  .framer-cVd3z .framer-mf5yw0 {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  /* Long unbroken case-study URLs should wrap instead of being cut off. */
+  .framer-cVd3z .framer-1g4qqgi,
+  .framer-cVd3z .framer-1n4f1i5,
+  .framer-cVd3z .framer-x150cb {
+    max-width: calc(100vw - 48px) !important;
+    min-width: 0 !important;
+  }
+  .framer-cVd3z a[href^="http"] {
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+}
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 2px solid #eb4f41 !important;
+  outline-offset: 3px !important;
+}
+</style>"""
+
 HREF_RE = re.compile(r'(?P<start>\bhref\s*=\s*")(?P<value>[^"]*)(?P<end>")')
 
 def convert_link(link: str, original_path: str, base: str) -> str:
@@ -59,6 +126,7 @@ def main():
             "https://drive.google.com/drive/u/0/home",
             "https://drive.google.com/file/d/1Bd4iLsRflw9EOaKZE4lgFxXbWA2hW6Yy/view?usp=sharing",
         )
+        result = result.replace("</head>", RESPONSIVE_CSS + "\n</head>", 1)
         file.write_text(result, encoding="utf-8")
         total += changes
         print(f"{route}: fixed {changes} route-relative links")
