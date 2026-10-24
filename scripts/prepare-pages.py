@@ -129,6 +129,54 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 </style>"""
 
+CLIENT_CONTACT_JS = """<script id="hannah-contact-override">
+/* Framer's hydrated React bundle can restore stale mailto links/text.
+   Keep the published contact address correct after hydration and SPA transitions. */
+(() => {
+  const current = "hannahpark0424@gmail.com";
+  const stale = ["hello@artemis.com", "hpark@college.harvard.edu"];
+  const convert = value => {
+    if (typeof value !== "string") return value;
+    for (const old of stale) if (value.includes(old)) value = value.split(old).join(current);
+    return value;
+  };
+  const update = () => {
+    if (!document.body) return;
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+      if (!node.parentElement || /^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/.test(node.parentElement.tagName)) continue;
+      const corrected = convert(node.nodeValue);
+      if (corrected !== node.nodeValue) node.nodeValue = corrected;
+    }
+    for (const el of document.querySelectorAll("[href],[aria-label],[title]")) {
+      for (const key of ["href","aria-label","title"]) {
+        const original = el.getAttribute(key);
+        if (original === null) continue;
+        const corrected = convert(original);
+        if (corrected !== original) el.setAttribute(key, corrected);
+      }
+    }
+  };
+  let queued = false;
+  const queueUpdate = () => {
+    if (queued) return;
+    queued = true;
+    queueMicrotask(() => { queued = false; update(); });
+  };
+  const start = () => {
+    update();
+    new MutationObserver(queueUpdate).observe(document.body, {
+      childList: true, characterData: true, attributes: true,
+      attributeFilter: ["href","aria-label","title"], subtree: true
+    });
+    window.addEventListener("pageshow", queueUpdate);
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, {once:true});
+  else start();
+})();
+</script>"""
+
 HREF_RE = re.compile(r'(?P<start>\bhref\s*=\s*")(?P<value>[^"]*)(?P<end>")')
 
 def convert_link(link: str, original_path: str, base: str) -> str:
@@ -175,7 +223,7 @@ def main():
             "https://drive.google.com/drive/u/0/home",
             "https://drive.google.com/file/d/1Bd4iLsRflw9EOaKZE4lgFxXbWA2hW6Yy/view?usp=sharing",
         )
-        result = result.replace("</head>", RESPONSIVE_CSS + "\n</head>", 1)
+        result = result.replace("</head>", RESPONSIVE_CSS + "\n" + CLIENT_CONTACT_JS + "\n</head>", 1)
         if any(old in result for old in ("hello@artemis.com", "hpark@college.harvard.edu")):
             raise RuntimeError(f"Outdated public contact in {route}")
         if route in ("/", "/about") and "hannahpark0424@gmail.com" not in result:
