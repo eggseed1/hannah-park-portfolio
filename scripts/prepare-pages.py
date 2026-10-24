@@ -40,7 +40,7 @@ RESPONSIVE_CSS = """<style id="hannah-pages-responsive-fixes">
   a[href$="#projects"] {
     display: inline-flex !important;
     align-items: center !important;
-    min-height: 44px !important;
+    min-height: 56px !important; /* parent animation scales by ~0.8 on mobile */
   }
 
   /* Framer retained 619px fixed widths on small project-detail layouts. */
@@ -167,14 +167,19 @@ def main():
                 changes += 1
             return match.group("start") + new + match.group("end")
         result = HREF_RE.sub(rewrite, original)
-        # Fix confirmed incorrect destinations without altering visible portfolio design.
-        # The Framer-export archive remains untouched for rollback.
-        result = result.replace("mailto:hello@artemis.com", "mailto:hpark@college.harvard.edu")
+        # Safety net: future Framer captures must not restore either legacy
+        # contact address in text, labels, or mailto links.
+        for outdated in ("hello@artemis.com", "hpark@college.harvard.edu"):
+            result = result.replace(outdated, "hannahpark0424@gmail.com")
         result = result.replace(
             "https://drive.google.com/drive/u/0/home",
             "https://drive.google.com/file/d/1Bd4iLsRflw9EOaKZE4lgFxXbWA2hW6Yy/view?usp=sharing",
         )
         result = result.replace("</head>", RESPONSIVE_CSS + "\n</head>", 1)
+        if any(old in result for old in ("hello@artemis.com", "hpark@college.harvard.edu")):
+            raise RuntimeError(f"Outdated public contact in {route}")
+        if route in ("/", "/about") and "hannahpark0424@gmail.com" not in result:
+            raise RuntimeError(f"Contact address absent from {route}")
         file.write_text(result, encoding="utf-8")
         total += changes
         print(f"{route}: fixed {changes} route-relative links")
