@@ -14,7 +14,7 @@ from urllib.parse import urljoin, urlsplit
 from urllib.parse import unquote
 
 ORIGIN = "https://affable-impact-924611.framer.app"
-HREF_RE = re.compile(r'(?P<start>\\bhref\\s*=\\s*")(?P<value>[^"]*)(?P<end>")')
+HREF_RE = re.compile(r'(?P<start>\bhref\s*=\s*")(?P<value>[^"]*)(?P<end>")')
 
 def convert_link(link: str, original_path: str, base: str) -> str:
     if not link.startswith(("./", "../", "/")) or link.startswith("//"):
