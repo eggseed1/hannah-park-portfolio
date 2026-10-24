@@ -51,8 +51,8 @@ export const links = {
   resume:
     "https://drive.google.com/file/d/1Bd4iLsRflw9EOaKZE4lgFxXbWA2hW6Yy/view?usp=sharing",
   resumeDriveHome: "https://drive.google.com/drive/u/0/home",
-  email: "mailto:hello@artemis.com",
-  emailLabel: "hpark@college.harvard.edu",
+  email: "mailto:hannahpark0424@gmail.com",
+  emailLabel: "hannahpark0424@gmail.com",
   linkedin: "https://www.linkedin.com/in/hannah-park0/",
   linkedinLabel: "linkedin.com/hannah-park",
   instagram: "https://www.instagram.com/45rpmdigger/",
