@@ -3,13 +3,13 @@
   "routes": {
     "/": {
       "file": "index.html",
-      "bytes": 289234,
-      "sha256": "90721738408c88e9be7e74fbfab37ab42a03f5bb53cbe9958512de4fbfa40732"
+      "bytes": 289252,
+      "sha256": "34f9f9e0c626782f55ae40b348f96bfec441e6f6eaf2ddadce2cd85fcbefcba3"
     },
     "/about": {
       "file": "about/index.html",
-      "bytes": 237004,
-      "sha256": "d078ebdcc3c5219c8394705bd49db88f4a310a764bc7ac86aeb73c53e328c8df"
+      "bytes": 237016,
+      "sha256": "0d7e21c45032fbe62e6c058bbdab3ec047c5b1cf13a48ebdd0880c772fd4acea"
     },
     "/portfolio/coinbase-2025-summer": {
       "file": "portfolio/coinbase-2025-summer/index.html",
