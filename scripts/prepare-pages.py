@@ -63,6 +63,54 @@ RESPONSIVE_CSS = """<style id="hannah-pages-responsive-fixes">
     max-width: 100% !important;
     min-width: 0 !important;
   }
+  /* USDA's mobile research / solution rows were fixed at 283px despite
+     containing paragraphs taller than their containers. Let text determine height. */
+  .framer-cVd3z .framer-1khcv5s,
+  .framer-cVd3z .framer-qs2onr,
+  .framer-cVd3z .framer-1adbrjk,
+  .framer-cVd3z .framer-zi4g4b,
+  .framer-cVd3z .framer-v2kfmf,
+  .framer-cVd3z .framer-op3h9x,
+  .framer-cVd3z .framer-15a1zch,
+  .framer-cVd3z .framer-ju8j3o {
+    height: auto !important;
+    min-height: 0 !important;
+    gap: 20px !important;
+    align-items: stretch !important;
+  }
+  .framer-cVd3z .framer-1khcv5s > *,
+  .framer-cVd3z .framer-qs2onr > *,
+  .framer-cVd3z .framer-1adbrjk > *,
+  .framer-cVd3z .framer-zi4g4b > *,
+  .framer-cVd3z .framer-v2kfmf > *,
+  .framer-cVd3z .framer-op3h9x > *,
+  .framer-cVd3z .framer-15a1zch > *,
+  .framer-cVd3z .framer-ju8j3o > * {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  /* USDA's research text and findings headings are 337–344px wide even
+     on a 320px phone; reduce them to the actual column width. */
+  .framer-cVd3z .framer-19eudy1,
+  .framer-cVd3z .framer-y23cpf,
+  .framer-cVd3z .framer-vspdrj,
+  .framer-cVd3z .framer-wfo80i,
+  .framer-cVd3z .framer-1l6uffy,
+  .framer-cVd3z .framer-5yjtcl,
+  .framer-cVd3z .framer-1lijeez,
+  .framer-cVd3z .framer-6r5pw2 {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  .framer-cVd3z .framer-j3ola8,
+  .framer-cVd3z .framer-1ms2bvw,
+  .framer-cVd3z .framer-1qvqpo7 {
+    overflow: visible !important;
+    min-width: 0 !important;
+  }
   /* Long unbroken case-study URLs should wrap instead of being cut off. */
   .framer-cVd3z .framer-1g4qqgi,
   .framer-cVd3z .framer-1n4f1i5,
