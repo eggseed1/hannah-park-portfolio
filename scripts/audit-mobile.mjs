@@ -48,8 +48,15 @@ for (const viewport of viewports) {
         const heading = [...d.querySelectorAll('h1,h2,h3')].filter(visible).slice(0, 14).map(el=>({ text:el.textContent.trim().slice(0,90), size: getComputedStyle(el).fontSize, lineHeight: getComputedStyle(el).lineHeight }));
         const tinyTargets = [...d.querySelectorAll('a,button,input,[role="button"]')].filter(visible).map(el=>({el,box:el.getBoundingClientRect()})).filter(({box})=>box.width>0 && box.height<40).slice(0,10).map(({el,box})=>({text:(el.textContent||el.getAttribute('aria-label')||'').trim().slice(0,38), height:Math.round(box.height)}));
         const links = [...d.querySelectorAll('a')].filter(visible).slice(0,18).map(el=>({text:(el.textContent||'').trim().replace(/\s+/g,' ').slice(0,45), href:el.href}));
+        const visibleText = d.body.innerText || '';
+        const contactLinks = [...d.querySelectorAll('a[href^="mailto:"]')].map(a => a.getAttribute('href') || '');
+        const footerTargets = [...d.querySelectorAll('footer.framer-MDJKr a[data-styles-preset="ro7OPezbn"]')]
+          .filter(visible).map(a => ({text: (a.textContent||'').trim().slice(0,35), height: Math.round(a.getBoundingClientRect().height)}));
+        const oldAddresses = ['hello@artemis.com', 'hpark@college.harvard.edu'];
+        const legacyEmailVisible = oldAddresses.some(e => visibleText.includes(e));
+        const legacyEmailLink = contactLinks.some(link => oldAddresses.some(e => link.includes(e)));
         const body = d.body.getBoundingClientRect();
-        return {title:d.title,documentWidth:d.documentElement.scrollWidth,viewportWidth:vw,bodyHeight:Math.round(body.height), overflow,brokenImages,heading,tinyTargets,links,headText:(d.body.innerText||'').slice(0,700)};
+        return {title:d.title,documentWidth:d.documentElement.scrollWidth,viewportWidth:vw,bodyHeight:Math.round(body.height), overflow,brokenImages,heading,tinyTargets,links,headText:visibleText.slice(0,700),contactLinks,footerTargets,legacyEmailVisible,legacyEmailLink,correctEmailVisible:visibleText.includes('hannahpark0424@gmail.com'),correctEmailLink:contactLinks.some(link => link.toLowerCase()==='mailto:hannahpark0424@gmail.com')};
       });
       const row = { route, viewport:viewport.name, http, errors, ...data };
       results.push(row);
@@ -70,3 +77,13 @@ await browser.close();
 await fs.writeFile('mobile-audit/results.json',JSON.stringify({base,date:new Date().toISOString(),results}, null, 2));
 const issues = results.filter(r=>r.error || r.http!==200 || r.documentWidth>r.viewportWidth+7 || r.brokenImages?.length || r.errors?.length);
 console.log('SUMMARY '+JSON.stringify({checked:results.length,issueViews:issues.length,issueViewDetails:issues.map(r=>({route:r.route,viewport:r.viewport,http:r.http,overflow:r.documentWidth-r.viewportWidth,broken:r.brokenImages?.length,errors:r.errors?.slice(0,2)}))},null,2));
+
+const hardFailures = results.filter(r =>
+  r.error || r.http !== 200 || r.legacyEmailVisible || r.legacyEmailLink ||
+  (['/', '/about/'].includes(r.route) && (!r.correctEmailVisible || !r.correctEmailLink))
+);
+if (hardFailures.length) {
+  console.error('FAILED PUBLIC ROUTE OR CONTACT ASSERTION '+JSON.stringify(
+    hardFailures.map(r => ({route:r.route,viewport:r.viewport,http:r.http,error:r.error,contactLinks:r.contactLinks,legacyEmailVisible:r.legacyEmailVisible,correctEmailVisible:r.correctEmailVisible})),null,2));
+  process.exitCode = 1;
+} else console.log('PASS: all 40 public routes load and live contact/email text matches requested Gmail.');
