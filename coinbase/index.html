@@ -328,6 +328,53 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   outline-offset: 3px !important;
 }
 </style>
+<script id="hannah-contact-override">
+/* Framer's hydrated React bundle can restore stale mailto links/text.
+   Keep the published contact address correct after hydration and SPA transitions. */
+(() => {
+  const current = "hannahpark0424@gmail.com";
+  const stale = ["hello" + "@artemis.com", "hpark" + "@college.harvard.edu"];
+  const convert = value => {
+    if (typeof value !== "string") return value;
+    for (const old of stale) if (value.includes(old)) value = value.split(old).join(current);
+    return value;
+  };
+  const update = () => {
+    if (!document.body) return;
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+      if (!node.parentElement || /^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/.test(node.parentElement.tagName)) continue;
+      const corrected = convert(node.nodeValue);
+      if (corrected !== node.nodeValue) node.nodeValue = corrected;
+    }
+    for (const el of document.querySelectorAll("[href],[aria-label],[title]")) {
+      for (const key of ["href","aria-label","title"]) {
+        const original = el.getAttribute(key);
+        if (original === null) continue;
+        const corrected = convert(original);
+        if (corrected !== original) el.setAttribute(key, corrected);
+      }
+    }
+  };
+  let queued = false;
+  const queueUpdate = () => {
+    if (queued) return;
+    queued = true;
+    queueMicrotask(() => { queued = false; update(); });
+  };
+  const start = () => {
+    update();
+    new MutationObserver(queueUpdate).observe(document.body, {
+      childList: true, characterData: true, attributes: true,
+      attributeFilter: ["href","aria-label","title"], subtree: true
+    });
+    window.addEventListener("pageshow", queueUpdate);
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, {once:true});
+  else start();
+})();
+</script>
 </head>
 <body>
     <script async src="https://events.framer.com/script?v=2" data-fid="4910a570f35a498fea31d5ef3ee2839c214059946bdf011f82f57b576fad8549" data-no-nt></script>
