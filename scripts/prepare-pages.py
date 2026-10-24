@@ -134,7 +134,7 @@ CLIENT_CONTACT_JS = """<script id="hannah-contact-override">
    Keep the published contact address correct after hydration and SPA transitions. */
 (() => {
   const current = "hannahpark0424@gmail.com";
-  const stale = ["hello@artemis.com", "hpark@college.harvard.edu"];
+  const stale = ["hello" + "@artemis.com", "hpark" + "@college.harvard.edu"];
   const convert = value => {
     if (typeof value !== "string") return value;
     for (const old of stale) if (value.includes(old)) value = value.split(old).join(current);
