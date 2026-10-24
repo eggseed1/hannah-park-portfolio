@@ -1,0 +1,32 @@
+name: Inspect Framer reference
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-framer.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Framer HTML and report page structure
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import urllib.request, urllib.error, re
+          u='https://affable-impact-924611.framer.app/'
+          try:
+              req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'})
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  b=r.read()
+                  text=b.decode('utf-8','replace')
+                  print('STATUS:',r.status)
+                  print('FINAL_URL:',r.url)
+                  print('BYTES:',len(b))
+                  print('TITLE:',re.findall(r'<title[^>]*>(.*?)</title>',text,re.I|re.S)[:2])
+                  print('PAGES:',re.findall(r'href="(/(?:about|portfolio)[^"]*)"',text)[:30])
+                  print('STYLESHEETS:',re.findall(r'<link[^>]*rel="stylesheet"[^>]*>',text)[:6])
+                  print('SNIPPET:',text[:3000])
+          except Exception as e:print('ERROR:',repr(e))
+          PY
