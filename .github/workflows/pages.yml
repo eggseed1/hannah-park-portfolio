@@ -1,12 +1,11 @@
-name: Deploy portfolio to GitHub Pages
-
+name: Deploy exact Framer portfolio
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -18,22 +17,43 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout portfolio
         uses: actions/checkout@v4
-      - name: Use Node.js
-        uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: npm
-      - name: Install dependencies
-        run: npm ci
-      - name: Build site
-        run: npm run build
-        env:
-          VITE_BASE: /hannah-park-portfolio/
-      - name: GitHub Pages SPA fallback
-        run: cp dist/index.html dist/404.html
-      - name: Upload site
+          persist-credentials: true
+
+      - name: Capture original published Framer pages, unchanged
+        run: python3 scripts/mirror-framer.py --out framer-export
+
+      - name: Verify every portfolio route was captured
+        run: |
+          python3 - <<'PY'
+          import json, pathlib
+          root = pathlib.Path('framer-export')
+          manifest = json.loads((root/'framer-snapshot.json').read_text())
+          assert len(manifest['routes']) >= 8, 'Incomplete Framer capture'
+          for name, meta in manifest['routes'].items():
+              page = root / meta['file']
+              assert page.exists() and page.stat().st_size > 100000, f'Invalid page {name}'
+          print('Verified', len(manifest['routes']), 'Framer HTML documents')
+          PY
+
+      - name: Keep source snapshot in GitHub
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add framer-export
+          if ! git diff --cached --quiet; then
+            git commit -m "Sync 1:1 Framer source snapshot [skip ci]"
+            git push origin HEAD:main || echo "Source snapshot push skipped due to newer main commit"
+          fi
+
+      - name: Prepare GitHub Pages output
+        run: |
+          mkdir -p dist
+          cp -a framer-export/. dist/
+
+      - name: Upload exact Framer site
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
@@ -45,6 +65,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Publish
+      - name: Deploy GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
