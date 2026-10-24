@@ -10,23 +10,27 @@ jobs:
   inspect:
     runs-on: ubuntu-latest
     steps:
-      - name: Download Framer HTML and report page structure
+      - name: Inspect page routes and dependencies
         shell: bash
         run: |
           python3 - <<'PY'
-          import urllib.request, urllib.error, re
-          u='https://affable-impact-924611.framer.app/'
-          try:
-              req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'})
-              with urllib.request.urlopen(req,timeout=30) as r:
-                  b=r.read()
-                  text=b.decode('utf-8','replace')
-                  print('STATUS:',r.status)
-                  print('FINAL_URL:',r.url)
-                  print('BYTES:',len(b))
-                  print('TITLE:',re.findall(r'<title[^>]*>(.*?)</title>',text,re.I|re.S)[:2])
-                  print('PAGES:',re.findall(r'href="(/(?:about|portfolio)[^"]*)"',text)[:30])
-                  print('STYLESHEETS:',re.findall(r'<link[^>]*rel="stylesheet"[^>]*>',text)[:6])
-                  print('SNIPPET:',text[:3000])
-          except Exception as e:print('ERROR:',repr(e))
+          from urllib.request import urlopen, Request
+          import re
+          from html import unescape
+          base='https://affable-impact-924611.framer.app'
+          def get(path):
+              try:
+                  r=urlopen(Request(base+path,headers={'User-Agent':'Mozilla/5.0'}),timeout=25)
+                  return r.status, r.url, r.read().decode('utf-8','replace')
+              except Exception as e:
+                  return 0,str(e),''
+          for path in ['/sitemap.xml','/robots.txt','/','/about','/portfolio/coinbase-2025-summer','/portfolio/ibm-2024-summer','/portfolio/hanhwa-investment','/portfolio/usda','/coinbase','/ibm']:
+              status,url,body=get(path)
+              print('PATH',path,'STATUS',status,'BYTES',len(body),'URL',url)
+              if 'xml' in path or 'txt' in path:print('BODY',body[:6500])
+              if path=='/':
+                  print('HREFS',list(dict.fromkeys(unescape(x) for x in re.findall(r'href=["\\\']([^"\\\']+)["\\\']',body)))[:150])
+                  print('SCRIPTS',list(dict.fromkeys(re.findall(r'<script[^>]*src=["\\\']([^"\\\']+)',body)))[:20])
+                  print('STYLES',re.findall(r'<style([^>]*)>',body)[:20])
+                  print('HTML_INFO',body[-1400:])
           PY
