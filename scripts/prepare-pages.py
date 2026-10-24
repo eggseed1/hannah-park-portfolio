@@ -52,6 +52,13 @@ def main():
                 changes += 1
             return match.group("start") + new + match.group("end")
         result = HREF_RE.sub(rewrite, original)
+        # Fix confirmed incorrect destinations without altering visible portfolio design.
+        # The Framer-export archive remains untouched for rollback.
+        result = result.replace("mailto:hello@artemis.com", "mailto:hpark@college.harvard.edu")
+        result = result.replace(
+            "https://drive.google.com/drive/u/0/home",
+            "https://drive.google.com/file/d/1Bd4iLsRflw9EOaKZE4lgFxXbWA2hW6Yy/view?usp=sharing",
+        )
         file.write_text(result, encoding="utf-8")
         total += changes
         print(f"{route}: fixed {changes} route-relative links")
