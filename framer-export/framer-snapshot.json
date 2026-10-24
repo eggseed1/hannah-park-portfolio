@@ -1,0 +1,45 @@
+{
+  "source": "https://affable-impact-924611.framer.app",
+  "routes": {
+    "/": {
+      "file": "index.html",
+      "bytes": 289234,
+      "sha256": "90721738408c88e9be7e74fbfab37ab42a03f5bb53cbe9958512de4fbfa40732"
+    },
+    "/about": {
+      "file": "about/index.html",
+      "bytes": 237004,
+      "sha256": "d078ebdcc3c5219c8394705bd49db88f4a310a764bc7ac86aeb73c53e328c8df"
+    },
+    "/portfolio/coinbase-2025-summer": {
+      "file": "portfolio/coinbase-2025-summer/index.html",
+      "bytes": 226297,
+      "sha256": "ca3e3a429be815755e9b67d257e001ca4341a3efb1bb0e729152c9dd665bf05c"
+    },
+    "/portfolio/ibm-2024-summer": {
+      "file": "portfolio/ibm-2024-summer/index.html",
+      "bytes": 227186,
+      "sha256": "ae2f2e49065085e85492dad19a3fa9020035ee474587b697b14518e34b30151a"
+    },
+    "/portfolio/hanhwa-investment": {
+      "file": "portfolio/hanhwa-investment/index.html",
+      "bytes": 201078,
+      "sha256": "56c53bbc260eef9a66a48e9315408c67a89538b8978fba062a1491d02191ceb6"
+    },
+    "/portfolio/usda": {
+      "file": "portfolio/usda/index.html",
+      "bytes": 349232,
+      "sha256": "2164e5190af83315d5197617a4e4c78657ace0a7e4ee39d092831a710df2bd62"
+    },
+    "/coinbase": {
+      "file": "coinbase/index.html",
+      "bytes": 200291,
+      "sha256": "6e6b7941178ce6a09838da93fe1b91109674f27f3f332ef9aab13f3efad98b4e"
+    },
+    "/ibm": {
+      "file": "ibm/index.html",
+      "bytes": 163278,
+      "sha256": "0e278c8ccc72551e01b7511878843a0aaf2f0fbe8c713730fbdc426bc769f306"
+    }
+  }
+}
